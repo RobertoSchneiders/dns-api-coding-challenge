@@ -87,12 +87,10 @@ POST /dns
 Content-Type: application/json
 
 {
-	"dns":
-	{
-		"ip": "1.1.1.1 ",
-		"domains": ["lorem.com", "ipsum.com", "dolor.com", "amet.com"]
-	}
-	
+  "dns": {
+    "ip": "1.1.1.1 ",
+    "domains": ["lorem.com", "ipsum.com", "dolor.com", "amet.com"]
+  }	
 }
 ```
 
