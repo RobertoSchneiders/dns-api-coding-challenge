@@ -2,7 +2,12 @@ class DnsController < ApplicationController
   before_action :set_dns, only: [:show, :update, :destroy]
 
   def index
-    render json: Dns.all
+    index_params
+
+    query = Dns.search(params[:include], params[:exclude])
+    dns_records = paginate(query.only_essential_fields)
+
+    render json: { records: query.count, domains: dns_records }
   end
 
   def show
@@ -38,5 +43,11 @@ class DnsController < ApplicationController
 
     def dn_params
       params.require(:dns).permit(:ip, domains: [])
+    end
+
+    def index_params
+      params.require(:page)
+      @include = params.permit(include: [])
+      @exclude = params.permit(exclude: [])
     end
 end

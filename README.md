@@ -68,3 +68,55 @@ Then the response should have:
 - An array of hostnames returned by the search (lorem.com, ipsum.com, dolor.com, amet.com), excluding any hostnames specified in the query (ipsum.com, dolor.com, sit.com)
 - Hostname: lorem.com, Number of matching DNS records: 1
 - Hostname: amet.com, Number of matching DNS records: 2
+
+# Documentation
+
+## How to run the project
+
+- configure the `database.yml` for your PostgreSQL environment
+- bundle install
+- rake db:setup
+- rails s
+
+## How to use the API
+
+### Create a DNS Record
+
+```
+POST /dns
+Content-Type: application/json
+
+{
+	"dns":
+	{
+		"ip": "1.1.1.1 ",
+		"domains": ["lorem.com", "ipsum.com", "dolor.com", "amet.com"]
+	}
+	
+}
+```
+
+### Search for a DNS record
+
+```
+GET /dns?page=1&include[]=ipsum.com&include[]=dolor.com&exclude[]=sit.com
+```
+
+Result example:
+```
+{
+  "records": 1,
+  "domains": [
+    {
+      "id": 4,
+      "ip": "1.1.1.1 ",
+      "domains": [
+        "lorem.com",
+        "ipsum.com",
+        "dolor.com",
+        "amet.com"
+      ]
+    }
+  ]
+}
+```

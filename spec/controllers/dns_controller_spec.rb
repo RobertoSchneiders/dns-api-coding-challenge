@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe DnsController, type: :controller do
 
   let(:valid_attributes) {
-    { ip: "1.1.1.1", domains: ["fast.com", "ruby.net"] }
+    { ip: "1.1.1.1", domains: ["lorem.com", "ipsum.com", "dolor.com", "amet.com"] }
   }
 
   let(:invalid_attributes) {
@@ -13,10 +13,35 @@ RSpec.describe DnsController, type: :controller do
   let(:valid_session) { {} }
 
   describe "GET #index" do
-    it "returns a success response" do
+    before do
       Dns.create! valid_attributes
-      get :index, params: {}
+      Dns.create!(ip: "2.2.2.2", domains: ["ipsum.com"])
+      Dns.create!(ip: "3.3.3.3", domains: ["ipsum.com", "dolor.com", "amet.com"])
+      Dns.create!(ip: "4.4.4.4", domains: ["ipsum.com", "dolor.com", "sit.com", "amet.com"])
+      Dns.create!(ip: "5.5.5.5", domains: ["dolor.com", "sit.com"])
+    end
+
+    it "returns a success response" do
+      get :index, params: { page: 1 }
       expect(response).to be_successful
+    end
+
+    it "requires the page parameter" do
+      expect{ get(:index, params: {}) }.to raise_error ActionController::ParameterMissing
+    end
+
+    it "accepts filters" do
+      params = {
+        page: 1,
+        include: ["ipsum.com", "dolor.com"],
+        exclude: ["sit.com"]
+      }
+
+      get :index, params: params
+      json_response = JSON.parse(response.body)
+      expect(json_response["domains"].size).to eq(2)
+      expect(json_response["domains"].first["ip"]).to eq("1.1.1.1")
+      expect(json_response["domains"].last["ip"]).to eq("3.3.3.3")
     end
   end
 
@@ -31,16 +56,13 @@ RSpec.describe DnsController, type: :controller do
   describe "POST #create" do
     context "with valid params" do
       it "creates a new Dns" do
-        puts valid_attributes.inspect
         expect {
           post :create, params: {dns: valid_attributes}
-          puts response.body
         }.to change(Dns, :count).by(1)
       end
 
       it "renders a JSON response with the new dns" do
         post :create, params: {dns: valid_attributes}
-        puts response.body.inspect
         expect(response).to have_http_status(:created)
         expect(response.content_type).to eq('application/json')
         expect(response.location).to eq(dn_url(Dns.last))
