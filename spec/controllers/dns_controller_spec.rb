@@ -7,7 +7,7 @@ RSpec.describe DnsController, type: :controller do
   }
 
   let(:invalid_attributes) {
-    { ips: "12345", domains: "fast.com, ruby.net" }
+    { ips: "", domains: "fast.com, ruby.net" }
   }
 
   let(:valid_session) { {} }
@@ -72,7 +72,7 @@ RSpec.describe DnsController, type: :controller do
     context "with invalid params" do
       it "renders a JSON response with errors for the new dns" do
 
-        post :create, params: {dns: invalid_attributes}, session: valid_session
+        post :create, params: {dns: invalid_attributes}
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to eq('application/json')
@@ -81,13 +81,14 @@ RSpec.describe DnsController, type: :controller do
   end
 
   describe "PUT #update" do
+    let(:dns) { Dns.create!(valid_attributes) }
+
     context "with valid params" do
       let(:new_attributes) {
         { ip: "2.2.2.2", domains: ["new.com"] }
       }
 
       it "updates the requested dns" do
-        dns = Dns.create! valid_attributes
         put :update, params: {id: dns.to_param, dns: new_attributes}
         dns.reload
         expect(dns.ip).to eq(new_attributes[:ip])
@@ -95,10 +96,18 @@ RSpec.describe DnsController, type: :controller do
       end
 
       it "renders a JSON response with the dns" do
-        dns = Dns.create! valid_attributes
-
         put :update, params: {id: dns.to_param, dns: valid_attributes}
         expect(response).to have_http_status(:ok)
+        expect(response.content_type).to eq('application/json')
+      end
+    end
+
+    context "with invalid params" do
+      it "renders a JSON response with errors for the new dns" do
+        allow_any_instance_of(Dns).to receive(:update).and_return(false)
+        put :update, params: {id: dns.to_param, dns: invalid_attributes}
+
+        expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to eq('application/json')
       end
     end

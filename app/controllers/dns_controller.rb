@@ -15,7 +15,7 @@ class DnsController < ApplicationController
   end
 
   def create
-    @dns = Dns.new(dn_params)
+    @dns = Dns.new(dns_params)
 
     if @dns.save
       render json: @dns, status: :created, location: @dns
@@ -25,7 +25,7 @@ class DnsController < ApplicationController
   end
 
   def update
-    if @dns.update(dn_params)
+    if @dns.update(dns_params)
       render json: @dns
     else
       render json: @dns.errors, status: :unprocessable_entity
@@ -41,7 +41,7 @@ class DnsController < ApplicationController
       @dns = Dns.find(params[:id])
     end
 
-    def dn_params
+    def dns_params
       params.require(:dns).permit(:ip, domains: [])
     end
 
