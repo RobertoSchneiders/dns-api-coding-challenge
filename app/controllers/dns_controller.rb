@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class DnsController < ApplicationController
-  before_action :set_dns, only: [:show, :update, :destroy]
+  before_action :set_dns, only: %i[show update destroy]
 
   def index
     index_params
@@ -37,17 +39,18 @@ class DnsController < ApplicationController
   end
 
   private
-    def set_dns
-      @dns = Dns.find(params[:id])
-    end
 
-    def dns_params
-      params.require(:dns).permit(:ip, domains: [])
-    end
+  def set_dns
+    @dns = Dns.find(params[:id])
+  end
 
-    def index_params
-      params.require(:page)
-      @include = params.permit(include: [])
-      @exclude = params.permit(exclude: [])
-    end
+  def dns_params
+    params.require(:dns).permit(:ip, domains: [])
+  end
+
+  def index_params
+    params.require(:page)
+    @include = params.permit(include: [])
+    @exclude = params.permit(exclude: [])
+  end
 end

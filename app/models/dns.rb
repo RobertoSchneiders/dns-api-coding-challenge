@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 class Dns < ApplicationRecord
   validates :ip, presence: true
   validates :domains, presence: true
 
   def self.search(include, exclude)
-    includes(include).
-    excludes(exclude)
+    includes(include)
+      .excludes(exclude)
   end
 
   def self.only_essential_fields
@@ -12,18 +14,18 @@ class Dns < ApplicationRecord
   end
 
   def self.includes(include)
-    return self unless include.present?
+    return self if include.blank?
 
     where(domains_contain, include)
   end
 
   def self.excludes(exclude)
-    return self unless exclude.present?
+    return self if exclude.blank?
 
     where.not(domains_contain, exclude)
   end
 
   def self.domains_contain
-    "domains @> ARRAY[?]::varchar[]"
+    'domains @> ARRAY[?]::varchar[]'
   end
 end
