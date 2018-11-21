@@ -3,9 +3,8 @@ class Dns < ApplicationRecord
   validates :domains, presence: true
 
   def self.search(include, exclude)
-
-      includes(include).
-      excludes(exclude)
+    includes(include).
+    excludes(exclude)
   end
 
   def self.only_essential_fields
