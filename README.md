@@ -1,5 +1,7 @@
 # API Assignment
 
+[![Build Status](https://travis-ci.org/RobertoSchneiders/dns-api-coding-challenge.svg?branch=master)](https://travis-ci.org/RobertoSchneiders/dns-api-coding-challenge) [![Maintainability](https://api.codeclimate.com/v1/badges/53e0970726e1ee7d000e/maintainability)](https://codeclimate.com/github/RobertoSchneiders/dns-api-coding-challenge/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/53e0970726e1ee7d000e/test_coverage)](https://codeclimate.com/github/RobertoSchneiders/dns-api-coding-challenge/test_coverage)
+
 ## Introduction
 
 The objective of this assignment is to evaluate your knowledge of Ruby on Rails, Git, Design Patterns, Testing, APIs and SQL.
